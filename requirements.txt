@@ -1,0 +1,6 @@
+confluent-kafka
+pyspark==3.5.1
+fastapi
+uvicorn
+psycopg2-binary
+redis
