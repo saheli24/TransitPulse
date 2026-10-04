@@ -1,0 +1,43 @@
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; color: #111827; }
+.app { position: relative; height: 100%; width: 100%; }
+.map { position: absolute; top: 0; bottom: 0; left: 72px; right: 0; }
+.sidebar {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 72px; z-index: 1200;
+  background: #111827; display: flex; flex-direction: column; align-items: center;
+  gap: 6px; padding: 14px 0;
+}
+.logo { color: #fff; font-weight: 800; font-size: 11px; letter-spacing: .5px; margin-bottom: 10px; }
+.nav-btn {
+  width: 58px; padding: 8px 0; border: none; border-radius: 10px; background: transparent;
+  color: #9ca3af; cursor: pointer; font-size: 11px; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+}
+.nav-btn .icon { font-size: 20px; }
+.nav-btn:hover { background: #1f2937; color: #fff; }
+.nav-btn.active { background: #2563eb; color: #fff; }
+.panel {
+  position: absolute; top: 16px; left: 88px; width: 440px; max-height: calc(100% - 32px);
+  overflow: auto; z-index: 1200; background: #fff; border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25); padding: 16px 18px;
+}
+.panel h2 { margin: 0 0 2px; font-size: 18px; }
+.sub { color: #6b7280; font-size: 13px; margin: 0 0 12px; }
+.close { position: absolute; top: 10px; right: 14px; border: none; background: none; font-size: 22px; cursor: pointer; color: #6b7280; }
+.statbar {
+  position: absolute; top: 16px; right: 16px; z-index: 1100; background: #fff;
+  padding: 10px 18px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.2);
+  display: flex; gap: 22px; font-size: 12px; color: #6b7280;
+}
+.statbar b { display: block; font-size: 18px; color: #111827; }
+.legend {
+  position: absolute; bottom: 24px; right: 16px; z-index: 1100; background: #fff;
+  padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.2); font-size: 12px;
+}
+.bar { height: 8px; width: 140px; border-radius: 4px; margin: 6px 0 2px;
+  background: linear-gradient(to right, hsl(120,85%,45%), hsl(60,85%,45%), hsl(0,85%,45%)); }
+.legend .ends { display: flex; justify-content: space-between; color: #6b7280; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; color: #6b7280; font-weight: 600; padding: 4px 6px; }
+td { padding: 6px; border-top: 1px solid #f3f4f6; }
+.leaflet-tile-pane { filter: grayscale(0.6) brightness(1.05); }
