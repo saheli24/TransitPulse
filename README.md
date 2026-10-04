@@ -371,13 +371,3 @@ TransitPulse/
 - The dashboard polls every 3 seconds rather than using WebSockets.
 - Station coordinates are approximate.
 
-## Roadmap
-
-- Replace the Python consumer with an Apache Spark Structured Streaming job and benchmark both
-- Validate on a real TTC delay dataset
-- Threshold sweep (2.0, 2.5, 3.0) in the results table
-- GitHub Actions CI with linting and tests
-
-## License
-
-MIT
