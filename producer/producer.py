@@ -43,12 +43,15 @@ p = Producer({"bootstrap.servers": "localhost:9092", "linger.ms": 20})
 source = from_csv("data/ttc.csv", N) if os.path.exists("data/ttc.csv") else synthetic(N)
 
 sent = 0
+t0 = time.perf_counter()
 for ev in source:
     ev["produced_at_ms"] = time.time() * 1000
     p.produce(TOPIC, json.dumps(ev).encode())
     sent += 1
     p.poll(0)
     if RATE > 0:
-        time.sleep(1 / RATE)
+        delay = t0 + sent / RATE - time.perf_counter()
+        if delay > 0:
+            time.sleep(delay)
 p.flush()
 print(f"Sent {sent} events")

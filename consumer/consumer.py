@@ -1,11 +1,11 @@
-import json, time
+import json, os, time
 from collections import deque
 import psycopg2
 from psycopg2.extras import execute_values
 from confluent_kafka import Consumer
 
 TOPIC = "transit-events"
-THRESHOLD = 3.0      # z-score cutoff; try 2.0 / 2.5 / 3.0 for the benchmark
+THRESHOLD = float(os.environ.get("THRESHOLD", 3.0))
 WINDOW = 500         # per-route rolling baseline size
 MIN_SAMPLES = 30     # no scoring until the baseline has this many points
 
@@ -44,7 +44,7 @@ print("Consumer running. Ctrl+C to stop.")
 total = 0
 try:
     while True:
-        msgs = consumer.consume(num_messages=500, timeout=1.0)
+        msgs = consumer.consume(num_messages=500, timeout=0.5)
         rows = []
         for m in msgs:
             if m.error():
