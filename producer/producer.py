@@ -7,23 +7,41 @@ N = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
 RATE = float(sys.argv[2]) if len(sys.argv) > 2 else 200  # events/sec; 0 = unlimited
 
 STATIONS = {
-    "Line 1": ["Bloor-Yonge", "Union", "St George", "Finch", "Kennedy"],
-    "Line 2": ["Kennedy", "Broadview", "Spadina", "Kipling"],
-    "Line 4": ["Sheppard-Yonge", "Don Mills"],
+    "Line 1": ["Finch", "York Mills", "Sheppard-Yonge", "Lawrence", "Eglinton",
+               "Bloor-Yonge", "Wellesley", "Dundas", "Union", "St George", "Spadina"],
+    "Line 2": ["Kipling", "Islington", "High Park", "Keele", "Spadina",
+               "Broadview", "Pape", "Victoria Park", "Kennedy"],
+    "Line 4": ["Sheppard-Yonge", "Bayview", "Don Mills"],
 }
-HOT = {"Bloor-Yonge", "Kennedy"}  # stations with more injected anomalies
+HOT = {"Bloor-Yonge", "Kennedy", "Union"}  # stations with more injected anomalies
+
+WEATHER = {}
+if os.path.exists("data/weather.json"):
+    with open("data/weather.json") as f:
+        WEATHER = json.load(f)
+WX_MULT = {"snow": 2.0, "rain": 1.4}
+EVENTS = {}
+if os.path.exists("data/events.json"):
+    with open("data/events.json") as f:
+        EVENTS = json.load(f)
+EVENT_MULT = 1.6
 
 def synthetic(n):
-    t = datetime(2024, 1, 1, 6, 0)
+    t = datetime(2024, 1, 1, 0, 0)
     for _ in range(n):
         route = random.choice(list(STATIONS))
         station = random.choice(STATIONS[route])
-        injected = random.random() < (0.08 if station in HOT else 0.02)
-        delay = random.uniform(25, 60) if injected else max(0, random.gauss(3, 1.5))
         t += timedelta(seconds=random.randint(5, 60))
+        wx = WEATHER.get(t.strftime("%Y-%m-%dT%H"), "unknown")
+        ev_name = EVENTS.get(t.strftime("%Y-%m-%d"))
+        rush = 2.0 if t.hour in (7, 8, 9, 16, 17, 18) else 1.0
+        base = 0.08 if station in HOT else 0.02
+        mult = rush * WX_MULT.get(wx, 1.0) * (EVENT_MULT if ev_name else 1.0)
+        injected = random.random() < min(base * mult, 0.9)
+        delay = random.uniform(25, 60) if injected else max(0, random.gauss(3, 1.5))
         yield {"ts": t.isoformat(), "route": route, "station": station,
-               "delay_min": round(delay, 1), "weather": "unknown", "injected": injected}
-
+               "delay_min": round(delay, 1), "weather": wx, "event": ev_name,
+               "injected": injected}
 def from_csv(path, n):
     # Adjust column names/date format to match the TTC file you download.
     with open(path, newline="", encoding="utf-8-sig") as f:

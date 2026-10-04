@@ -52,10 +52,11 @@ try:
             e = json.loads(m.value())
             z, is_anom = score(e["route"], e["delay_min"])
             rows.append([e["ts"], e["route"], e["station"], e["delay_min"], e["weather"],
-                         z, is_anom, e["injected"], time.time() * 1000 - e["produced_at_ms"]])
+                         e.get("event"), z, is_anom, e["injected"],
+                         time.time() * 1000 - e["produced_at_ms"]])
         if rows:
             execute_values(cur,
-                """INSERT INTO events (ts, route, station, delay_min, weather,
+            """INSERT INTO events (ts, route, station, delay_min, weather, event,
                                        zscore, is_anomaly, injected, latency_ms) VALUES %s""", rows)
             conn.commit()
             consumer.commit()

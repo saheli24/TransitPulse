@@ -51,3 +51,35 @@ is queueing delay, not processing time.
 - Anomaly labels are injected by the producer, so precision/recall measure
   agreement with synthetic ground truth, not real-world transit incidents.
 - Numbers come from one machine and will vary with hardware.
+
+
+## Latency (paced run)
+
+- **Command:** `python bench/bench.py 10000 500` (actual producer rate ~450 events/sec)
+- **Threshold:** z > 3.0
+
+| Metric | Result |
+|---|---|
+| p50 latency | 308 ms |
+| p95 latency | 546 ms |
+| Precision | 0.97 |
+| Recall | 1.00 |
+| TP / FP / FN | 439 / 12 / 0 |
+
+Latency is measured from producer timestamp to the moment the consumer scores
+the event, so it includes Kafka transit and consumer batching.
+
+## Threshold sweep (10k events, paced 500/sec)
+
+| Threshold | Precision | Recall |
+|---|---|---|
+| 2.0 | TBD | TBD |
+| 2.5 | TBD | TBD |
+| 3.0 | 0.97 | 1.00 |
+
+## Dataset versions
+
+- The 2M-event run and the 20k runs used the first generator (random
+  anomalies, 10 stations).
+- The paced runs use the current generator (21 stations, rush-hour,
+  weather and event effects). Results are not directly comparable.

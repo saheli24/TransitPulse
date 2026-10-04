@@ -5,6 +5,7 @@ CREATE TABLE events (
   station TEXT,
   delay_min DOUBLE PRECISION,
   weather TEXT,
+  event TEXT,
   zscore DOUBLE PRECISION,
   is_anomaly BOOLEAN,
   injected BOOLEAN,       -- ground-truth label (synthetic data only)
